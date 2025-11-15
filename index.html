@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USC Schedule Builder — Wireframe</title>
+  <style>
+    :root{
+      --bg:#fdf7f2;
+      --card:#ffffff;
+      --muted:#6b7280;
+
+      /* USC Colors */
+      --cardinal:#990000;
+      --cardinal-dark:#7a0000;
+      --gold:#ffcc00;
+      --gold-dark:#e6b800;
+
+      /* Updated accents */
+      --accent: var(--cardinal);
+      --accent-600: var(--cardinal-dark);
+
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 6px 20px rgba(22,24,35,0.06);
+      --radius:14px;
+      --radius-sm:10px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+      --system: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset & layout */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--system);
+      background:linear-gradient(180deg,var(--bg),#fff7d6 120px);
+      color:#111827;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+    }
+    .container{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:360px 1fr 380px;gap:20px;align-items:start}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:4px 0 0;color:var(--muted);font-size:13px}
+
+    /* Card */
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .card-compact{padding:12px;border-radius:var(--radius-sm)}
+
+    /* Inputs / Buttons */
+    .input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #e6e9f2;background:transparent;font-size:14px}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:10px;
+      font-weight:600;
+      border:0;
+      cursor:pointer;
+    }
+    .btn-primary{
+      background:var(--accent);
+      color:white;
+      box-shadow:0 6px 18px rgba(153,0,0,0.22);
+    }
+    .btn-primary:hover{
+      background:var(--cardinal-dark);
+    }
+    .btn-ghost{
+      background:transparent;
+      border:1px solid #e6e9f2;
+      color:var(--muted);
+    }
+
+    /* Department Pills */
+    .depts{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      background:#fff6e0;
+      border:1px solid rgba(153,0,0,0.15);
+      color:var(--cardinal);
+      cursor:pointer;
+    }
+    .pill.selected{
+      background:var(--accent);
+      color:white;
+      box-shadow:0 6px 18px rgba(153,0,0,0.22);
+    }
+
+    .small{font-size:13px;color:var(--muted)}
+
+    /* Center */
+    .middle{display:flex;flex-direction:column;gap:16px}
+
+    /* Availability */
+    .when2meet{
+      background:linear-gradient(180deg,#fff,#fff9e6);
+      border-radius:12px;
+      padding:12px;
+      flex:1;
+      box-shadow:0 6px 18px rgba(8,15,52,0.04);
+    }
+    .grid-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .grid-title{font-size:14px;font-weight:700}
+    .grid-sub{font-size:12px;color:var(--muted)}
+
+    .time-grid{display:grid;grid-template-columns:60px repeat(7,1fr);gap:6px}
+    .slot{
+      height:26px;
+      border-radius:6px;
+      border:1px dashed rgba(15,23,42,0.08);
+      background:linear-gradient(180deg,#fff,#fffdf6);
+    }
+    .slot.available{
+      background:linear-gradient(90deg, rgba(255,204,0,0.22), rgba(153,0,0,0.12));
+      border:1px solid rgba(153,0,0,0.4);
+    }
+    .time-cell{font-size:12px;color:var(--muted);padding:4px 6px}
+    .day-name{font-size:12px;color:var(--muted);text-align:center;padding:6px 4px}
+
+    .legend{display:flex;gap:12px;align-items:center;margin-top:10px}
+    .legend span{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+    .swatch{
+      width:14px;height:14px;border-radius:4px;
+      background:linear-gradient(90deg,var(--gold),var(--cardinal));
+    }
+
+    /* Courses list */
+    .courses{background:#fff;border-radius:12px;padding:12px;min-height:220px}
+    .course{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:10px;border-radius:10px;border:1px solid #f3f4ff;margin-bottom:8px
+    }
+    .course h3{margin:0;font-size:14px}
+    .meta{font-size:12px;color:var(--muted)}
+
+    /* Right */
+    .right .preview{
+      height:540px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow:auto;
+    }
+    .timeline{
+      background:linear-gradient(180deg,#fff,#fff9e6);
+      border-radius:12px;padding:12px;flex:1;box-shadow:var(--shadow)
+    }
+    .timeline h4{margin:0 0 8px 0;font-size:14px}
+    .slot-block{
+      border-radius:8px;padding:8px;margin-bottom:8px;
+      background:linear-gradient(90deg,#fff7d6,#ffeab3);
+      border:1px solid rgba(255,204,0,0.45)
+    }
+    .empty{
+      display:flex;align-items:center;justify-content:center;
+      color:var(--muted);height:100%;font-size:14px
+    }
+
+    .muted-small{font-size:12px;color:var(--muted);margin-top:6px}
+
+    @media (max-width:1050px){
+      .container{grid-template-columns:1fr; padding-bottom:60px}
+      .right{order:3}
+      .middle{order:2}
+    }
+  </style>
+</head>
+<body>
+  <header style="max-width:1180px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <h1>USC Schedule Builder</h1>
+      <p class="lead">Paste a USC catalogue URL, pick your availability, and filter departments.</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-ghost">Sign in</button>
+      <button class="btn btn-primary">New Project</button>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <!-- LEFT -->
+    <aside class="import card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <strong>Import</strong>
+          <div class="small" style="margin-top:6px">Paste USC catalogue link for a term</div>
+        </div>
+      </div>
+
+      <div class="url-row" style="margin-top:12px;display:flex;gap:10px">
+        <input class="input" type="text" value="https://classes.usc.edu/term/20261/catalogue/school" />
+        <button class="btn btn-primary" style="white-space:nowrap">Load</button>
+      </div>
+
+      <div style="margin-top:14px">
+        <div style="font-weight:700;font-size:13px">Departments</div>
+        <div class="depts" aria-label="Department filters" role="list">
+          <button class="pill selected" role="listitem">CSCI</button>
+          <button class="pill selected" role="listitem">MATH</button>
+          <button class="pill" role="listitem">ACAD</button>
+          <button class="pill" role="listitem">WRIT</button>
+          <button class="pill" role="listitem">ITP</button>
+          <button class="pill" role="listitem">CHEM</button>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+        <div class="small">Units</div>
+        <select class="input" style="max-width:160px;padding:8px">
+          <option>Any</option>
+          <option>1 - 3</option>
+          <option>3 - 5</option>
+          <option>5+</option>
+        </select>
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="btn btn-ghost">Clear</button>
+        <button class="btn btn-primary">Save Filters</button>
+      </div>
+
+      <div class="muted-small" style="margin-top:12px">Pro-tip: For initial demos you can skip caching; the backend can scrape on-demand.</div>
+    </aside>
+
+    <!-- MIDDLE -->
+    <section class="middle">
+      <!-- Availability -->
+      <div class="card when2meet">
+        <div class="grid-head">
+          <div>
+            <div class="grid-title">Your availability</div>
+            <div class="grid-sub">Select times you WANT to take classes — drag-select behavior in final app</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-ghost">Load sample</button>
+            <button class="btn btn-primary">Apply</button>
+          </div>
+        </div>
+
+        <div class="time-grid" aria-hidden="true" style="align-items:center">
+          <div></div>
+          <div class="day-name">Mon</div>
+          <div class="day-name">Tue</div>
+          <div class="day-name">Wed</div>
+          <div class="day-name">Thu</div>
+          <div class="day-name">Fri</div>
+          <div class="day-name">Sat</div>
+          <div class="day-name">Sun</div>
+
+          <!-- Rows -->
+          <div class="time-cell">8:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">9:00</div>
+          <div class="slot available"></div><div class="slot available"></div><div class="slot available"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">10:00</div>
+          <div class="slot available"></div><div class="slot available"></div><div class="slot available"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">11:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">12:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">13:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot available"></div><div class="slot available"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">14:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot available"></div><div class="slot available"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">15:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">16:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">17:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">18:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+          <div class="time-cell">19:00</div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        </div>
+
+        <div class="legend" style="justify-content:flex-end">
+          <span><span class="swatch"></span> Preferred class times</span>
+          <span style="opacity:0.9">Drag to select</span>
+        </div>
+      </div>
+
+      <!-- Courses -->
+      <div class="courses card-compact">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700">Courses</div>
+          <div class="small">Showing <strong>12</strong> sections</div>
+        </div>
+
+        <div class="course">
+          <div>
+            <h3>CSCI 104 — Intro to Programming</h3>
+            <div class="meta">MWF 10:00–10:50 • 4 units • Prof. Smith</div>
+          </div>
+          <div style="text-align:right">
+            <div class="meta">Section 101</div>
+            <button class="btn btn-primary" style="margin-top:8px">Add</button>
+          </div>
+        </div>
+
+        <div class="course">
+          <div>
+            <h3>MATH 245 — Linear Algebra</h3>
+            <div class="meta">TuTh 13:00–14:50 • 4 units • Prof. Lee</div>
+          </div>
+          <div style="text-align:right">
+            <div class="meta">Section 201</div>
+            <button class="btn btn-ghost" style="margin-top:8px">View</button>
+          </div>
+        </div>
+
+        <div class="course">
+          <div>
+            <h3>ACAD 200 — Academic Skills</h3>
+            <div class="meta">Fri 9:00–11:50 • 2 units • Prof. Gomez</div>
+          </div>
+          <div style="text-align:right">
+            <div class="meta">Section 010</div>
+            <button class="btn btn-ghost" style="margin-top:8px">View</button>
+          </div>
+        </div>
+
+        <div style="margin-top:8px" class="muted-small">
+          Tip: In the live app, added classes would be conflict-checked against your availability automatically.
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <aside class="right">
+      <div class="card preview">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <strong>Schedule Preview</strong>
+            <div class="small" style="margin-top:6px">Viable schedule combinations appear here</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost">Export</button>
+            <button class="btn btn-primary">Generate</button>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <h4>Current combination (1 of 6)</h4>
+
+          <div class="slot-block">
+            <div style="font-weight:700">CSCI 104 — 10:00–10:50 (MWF)</div>
+            <div class="small">Section 101 • Prof. Smith • SAL: 001</div>
+          </div>
+
+          <div class="slot-block">
+            <div style="font-weight:700">MATH 245 — 13:00–14:50 (TuTh)</div>
+            <div class="small">Section 201 • Prof. Lee</div>
+          </div>
+
+          <div style="margin-top:6px" class="empty">No conflicts — this schedule fits your selected times</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div class="muted-small">Saved: Today</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost">Prev</button>
+            <button class="btn btn-primary">Next</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
